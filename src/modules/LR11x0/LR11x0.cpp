@@ -2374,7 +2374,13 @@ int16_t LR11x0::getPacketStatusLoRa(float* rssiPkt, float* snrPkt, float* signal
 
   // pass the replies
   if(rssiPkt) { *rssiPkt = (float)buff[0] / -2.0f; }
-  if(snrPkt) { *snrPkt = (float)buff[1] / 4.0f; }
+  if(snrPkt) {
+    if ((float)buff[1] < 128.0) {
+      *snrPkt = (float)buff[1] / 4.0f;
+    } else {
+      *snrPkt = ((float)buff[1] - 256.0) / 4.0f;
+    }
+  }
   if(signalRssiPkt) { *signalRssiPkt = buff[2]; }
 
   return(state);
